@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage</title>
+
+    <!-- styling -->
+    <link rel="stylesheet" type="text/css" href="./css/index.css" />
+
+    <!-- scripting -->
+    <script type="text/javascript" src="./js/StorageApi.js"></script>
+
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-content">
+                <div class="app-name">
+                    <h4>App Storage</h4>
+                </div>
+                <div class="app-nav-menu">
+                    <a href="./auth/signin.html">Sign In</a>
+                    <a href="./auth/signup.html">Sign Up</a>
+                    <a hidden href="#" onclick="deleteAcc(event)">Delete Account</a>
+                    <a hidden href="#" onclick="signout(event)">Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section>
+        <div class="main-container">
+            <div class="main-content">
+                <div class="main-content-container">
+                    <div class="welcome-message">
+                        <h4>Let's Learn the Web Storage API</h4>
+                        <p>We will be focusing on local storage - for persitant data</p>
+                        <p>We will also be focusing on session storage - for not persisting data</p>
+                    </div>
+                </div>
+                <div class="user-details">
+                    <h4></h4>
+                </div>
+                <br />
+                <div class="general-contents">
+                    <div class="registered-users">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email Address</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/javascript">
+        const Storage = new StorageApi();
+
+        window.onload = function () {
+            checkIfUserIsLoggedIn();
+
+        }
+
+        function signout(event) {
+            event.preventDefault();
+            window.location.assign("/auth/signin.html");
+        }
+
+        function deleteAcc(event) {
+            event.preventDefault();
+            const isDeleted = Storage.removeData("currentUser");
+
+            window.location.assign("/auth/signin.html");
+        }
+
+        function checkIfUserIsLoggedIn() {
+            const currentUser = Storage.getData("currentUser");
+
+            if (currentUser !== null) {
+                const isLoggedIn = JSON.parse(currentUser);
+                const usersList = Storage.getData("users");
+
+                Array.from(document.querySelectorAll(".app-nav-menu a")).forEach((anchor, index) => {
+                    if (index <= 1) {
+                        anchor.setAttribute("hidden", true);
+                    } else {
+                        anchor.removeAttribute("hidden", true);
+                    }
+                });
+
+                buildUsersTable(JSON.parse(usersList));
+
+                document.querySelector(".user-details h4").textContent = "Hello, " + isLoggedIn.FirstName + " " + isLoggedIn.LastName;
+
+
+            } else {
+                window.location.assign("/auth/signin.html");
+            }
+        }
+
+        function buildUsersTable(list) {
+            list.forEach((row) => {
+                document.querySelector("tbody").innerHTML += `<tr>
+                        <td>${row.Username}</td>
+                        <td>${row.Email}</td>
+                        <td>${row.FirstName}</td>
+                        <td>${row.LastName}</td>
+                    </tr>`;
+            });
+        }
+    </script>
+</body>
+
+</html>
