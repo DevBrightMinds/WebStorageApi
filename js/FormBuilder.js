@@ -25,12 +25,24 @@ class FormBuilder {
             formInputField.setAttribute("id", prop.id);
             formInputField.setAttribute("type", prop.type);
             formInputField.setAttribute("name", prop.name);
-            formInputField.setAttribute("placeholder", prop.placeholder);
+
+            if (prop.placeholder)
+                formInputField.setAttribute("placeholder", prop.placeholder);
 
             formLabel.innerHTML = this.createSpaceBetweenLetters(prop.name);
 
-            formInputField.setAttribute("class", "form-control");
-            formInputFieldset.setAttribute("class", "form-group");
+            if (prop.type == "checkbox")
+                formLabel.setAttribute("class", "form-check-label");
+
+            if (prop.type !== "checkbox")
+                formInputField.setAttribute("class", "form-control");
+            else
+                formInputField.setAttribute("class", "form-check-input");
+
+            if (prop.type !== "checkbox")
+                formInputFieldset.setAttribute("class", "form-group");
+            else
+                formInputFieldset.setAttribute("class", "form-check");
 
             formInputFieldset.appendChild(formLabel);
             formInputFieldset.appendChild(formInputField);
@@ -41,7 +53,11 @@ class FormBuilder {
 
             document.querySelector("." + this.FormParentContainer).appendChild(formContainer);
             formBtn.addEventListener("click", this.submitFormData, false);
-            formInputField.addEventListener("keyup", this.handleFieldChange, false);
+
+            if (prop.type !== "checkbox")
+                formInputField.addEventListener("keyup", this.handleFieldChange, false);
+            else
+                formInputField.addEventListener("click", this.handleFieldChange, false);
 
         });
     }
@@ -56,17 +72,19 @@ class FormBuilder {
     }
 
     handleFieldChange = (event) => {
-        const fieldValue = (event.target).value;
+        const fieldType = (event.target).getAttribute("type");
         const fieldName = (event.target).getAttribute("name");
+        const fieldValue = fieldType !== "checkbox" ? (event.target).value : (event.target).checked;
 
         this.FormFields.forEach((field) => {
             if (field.name == fieldName)
-                field.vaue = fieldValue;
+                field.value = fieldValue;
+
         });
     }
 
     validateForm = () => {
-        const isEmptyValues = this.FormFields.find((item) => { return (item.value == ""); });
+        const isEmptyValues = this.FormFields.find((item) => { return (item.type == "text" && item.value == ""); });
 
         if (isEmptyValues)
             return { status: false, message: "Please fill in all required fields" };

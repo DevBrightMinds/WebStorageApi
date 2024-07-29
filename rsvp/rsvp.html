@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage | Sign In</title>
+
+    <!-- styling -->
+    <link rel="stylesheet" type="text/css" href="../css/index.css" />
+    <!-- scripting -->
+    <script type="text/javascript" src="../js/StorageApi.js"></script>
+    <script type="text/javascript" src="../js/FormBuilder.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-content">
+                <div class="app-name">
+                    <h4>RSVP Here</h4>
+                </div>
+                <div class="app-nav-menu">
+                    <!-- <a class="link-active" href="./signin.html">Sign In</a>
+                    <a href="./signup.html">Sign Up</a> -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section>
+        <div class="main-container">
+            <div class="main-content">
+                <div class="main-content-container">
+                    <div class="welcome-message">
+                        <h4>Tell us about yourself</h4>
+                        <p>Please enter your first and last name</p>
+                        <p>We would also like to know if you are bringing your partner</p>
+                    </div>
+                </div>
+                <div class="rsvp-form">
+                    <p class="status-report"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- scripting -->
+    <script type="text/javascript">
+        const FormProps = [{
+            type: "text",
+            id: "firstname",
+            name: "FirstName",
+            placeholder: "Enter your First Name"
+        }, {
+            type: "text",
+            id: "lastname",
+            name: "LastName",
+            placeholder: "Enter your Last Name"
+        }, {
+            type: "checkbox",
+            id: "partner",
+            name: "IsYourPartnerComing?",
+        }];
+        const AppFormBuilder = new FormBuilder("rsvp-form");
+
+        window.onload = function () {
+            AppFormBuilder.buildForm(FormProps);
+        }
+
+        AppFormBuilder.submitFormData = function (report) {
+            const isFormValid = AppFormBuilder.validateForm();
+
+            if (!isFormValid.status) {
+                responseHandle(isFormValid.message);
+            } else {
+                responseHandle("");
+                const formData = AppFormBuilder.buildFormData();
+               
+            }
+
+        }
+
+        function responseHandle(message) {
+            document.querySelector(".status-report").textContent = message;
+        }
+    </script>
+</body>
+
+</html>

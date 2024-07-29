@@ -77,18 +77,35 @@ header .header-content .app-nav-menu a {
 /* app-btn */
 
 /* forms */
+.rsvp-form,
 .sign-in-form {
     width: 80%;
     margin: 0 auto;
     padding: 1% 0 2% 0;
 }
 
+.rsvp-form .form-container,
 .sign-in-form .form-container {
     width: 30%;
 }
 
+.rsvp-form .status-report,
 .sign-in-form .status-report {
     color: red;
+}
+
+input[type='checkbox'] {
+    width: 30px;
+    height: 30px;
+}
+
+.form-check {
+    padding-left: unset !important;
+    display: grid !important;
+}
+
+.form-check .form-check-input {
+    margin-left: unset !important;
 }
 
 /* forms */
